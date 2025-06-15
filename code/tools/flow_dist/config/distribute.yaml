@@ -1,0 +1,57 @@
+Configuration:
+  name: 'xxx'
+  check_conf:
+    hdfs: # 任意 需要检查的表
+      base: "hdfs://"
+      rule_1: "hdfs://"
+      rule_2: "hdfs://"
+      score_1: "hdfs://"
+      score_2: "hdfs://"
+    sleep_once_time: 1800 # 每次检查间隔，秒
+    check_cnts: 48 # 检查次数
+  chat_conf:
+    is_chat: 0 # 1：打开；0：关闭
+    url: 'https://'
+    title: 'xxx'
+  down_conf:
+    sql_file: 'flow_dist/sql/ugrs.sql'
+    yarn_queue: 'xxx'
+    data_file: 'flow_dist/data/ugrs.txt'
+  dist_conf:
+    base: # 基础参数
+      index_exp_group: [2, 3, 4, 5, 6, 7, 8, 9] # 只对实验组进行最优化分配，只下载对应数据；需要group列
+      cols_score: ['score_01', 'score_02', 'score_03', 'score_04', 'score_10'] # 对应下载的sql表中的列名
+      item: ['aaa', 'bbb', 'ccc', 'ddd', 'eee']
+      code_item: [1, 2, 3, 4, 999] # 对应item
+      ratio_item: [0.0, 0.2, 0.4, 0.4, 0.0] # 对应item
+      coef_flow_shrink: 1.1 # 弹性缩放比例；多进程模型下应设置大一些，避免求解困难，1.05\1.1
+      cols_rep: # 对应写入的sql表中的列名
+        item: 'xxx'
+        item_score_rank: 'xxx_score_rank'
+        item_code: 'xxx_code'
+      res_file: 'flow_dist/data/df_lp_res.pickle'
+    rule: # 规则相关
+      is_rule: 1 # 是否需要规则处理
+      cols_rule: ['rule_01', 'rule_02', 'rule_04', 'rule_06', 'rule_03'] # 与打分列对应；除非不需要规则处理，否则非分组排序所需的也要在sql中补齐；1通过，0不通过
+      cols_rule_dist: ['rule_02', 'rule_04', 'rule_06'] # 分发时需要考虑的规则，若任意规则均不满足，则单独标记为“无效组”，编号666
+    multi_proc: # 多进程模式
+      is_multi: 1 # 是否启用多进程模式；不再进行分组排序简化，使用分组局部线性规划合并，规则可以精确到人维度；建议百万量级数据使用此方法，例：300w+ 5 item，100组 3w+ 单进程3mins+，10组 30w+ 单进程5h+
+      group_salt: '202306' # 分组盐值；md5_hash(sha1(uid+盐))%group_num
+      group_num: 100 # 分组局部线性规划区块数
+      worker_num: 10 # 进程数；最大为物理机核数
+      is_lp_file: 0 
+      lp_file_prefix: 'flow_dist/data/multi_proc/flow'
+    group_simp: # 分组简化模式
+      cols_score_group: ['score_01', 'score_02', 'score_03', 'score_04', 'score_10'] # 分组排序所需打分列；用于简化优化复杂度，需考虑当前item数量&分组数设置；有顺序，列名在先，优先级越高
+      coef_score_rule: 1e-10 # 规则降权系数
+      qcut_num: [10, 10, 10, 10, 10] # 分组数；与分组排序所需打分列对应；用于简化优化复杂度，精确控制规则影响程度等，需要考虑当前item数量&分组排序所需打分列设定
+      lp_file: 'flow_dist/data/flow.lp'
+  stat_conf:
+    role: 'xxx'
+    exp_mode: 'xxx'
+    item_name: 'xxx'
+    item_none_name: '无效组'
+    item_none_code: 666
+  upload_conf:
+    sql_file: 'flow_dist/sql/upload.sql'
+    data_file: 'flow_dist/data/df_lp_upload.txt'

@@ -1,0 +1,40 @@
+Configuration:
+  name: 'xxx'
+  check_conf:
+    hdfs: # 任意 需要检查的表
+      base: "hdfs://"
+    sleep_once_time: 1800 # 每次检查间隔，秒
+    check_cnts: 48 # 检查次数
+  chat_conf:
+    is_chat: 1 # 1：打开；0：关闭
+    url: 'https://'
+    title: 'xxx'
+  down_conf:
+    hdfs_path: 'hdfs://'
+    yarn_queue: 'xxx'
+    data_dir: 'flow_dist/data/hdfs'
+  dist_conf:
+    index_exp_group: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] # 只对实验组进行最优化分配，只下载对应数据；需要group列
+    cols_score: ['score_01', 'score_02', 'score_03', 'score_04'] # 对应下载的sql表中的列名
+    cols_score_group: ['score_01', 'score_02', 'score_03', 'score_04'] # 分组排序所需打分列；用于简化优化复杂度，需考虑当前item数量&分组数设置；有顺序，列名在先，优先级越高
+    is_rule: 1 # 是否需要规则处理
+    cols_rule: ['rule_01', 'rule_02', 'rule_03', 'rule_04'] # 与打分列对应；除非不需要规则处理，否则非分组排序所需的也要在sql中补齐；1通过，0不通过
+    coef_score_rule: 1e-10 # 规则降权系数
+    qcut_num: 10 # 分组数；用于简化优化复杂度，需要考虑当前item数量&分组排序所需打分列设定
+    item: ['aaa', 'bbb', 'ccc', 'ddd']
+    ratio_item: [0.1, 0.0, 0.6, 0.3] # 对应item
+    coef_flow_shrink: 1.05
+    lp_file: 'flow_dist/data/flow.lp'
+    code_item: [1, 2, 3, 999] # 对应item
+    cols_rep: # 对应写入的sql表中的列名
+      item: 'xxx'
+      item_score_rank: 'xxx_score_rank'
+      item_code: 'xxx_code'
+    res_file: 'flow_dist/data/df_lp_res.pickle'
+  stat_conf:
+    role: 'xxx'
+    exp_mode: 'xxx'
+    item_name: 'xxx'
+  upload_conf:
+    sql_file: 'flow_dist/sql/upload.sql'
+    data_file: 'flow_dist/data/df_lp_upload.txt'

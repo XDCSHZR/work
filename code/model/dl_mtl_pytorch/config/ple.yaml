@@ -1,0 +1,29 @@
+Model:
+  mode: 'multi-label'  # multi-class  multi-label
+  embed_dim: 8
+  num_tasks: 2
+  specific_units: 64
+  shared_units: 64
+  specific_hidden_units: [256, 128]
+  shared_hidden_units: [256, 128]
+  num_specific_expert: 2
+  num_shared_expert: 2
+  num_extraction_module: 2
+  tower_hidden_units: [32, 16]
+  dropout: 0.5
+  use_bn: False
+  loss: ''  # focalloss
+  
+Data:
+  trainFilePath: '../data/train_dataset_0124.txt'  # _sample
+  testFilePath: '../data/test_dataset_0124.txt'
+
+Train:
+  lr: 0.004
+  batchSize: 4096
+  milestones: [10, 20, 30]
+  gamma: 0.5
+  epochs: 100
+  numWorkers: 16
+
+Seed: 2021

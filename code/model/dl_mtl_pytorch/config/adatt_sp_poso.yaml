@@ -1,0 +1,40 @@
+Model:
+  mode: 'multi-label'  # multi-class  multi-label
+  embed_dim: 8
+  num_tasks: 4
+  num_task_experts: 2
+  num_shared_experts: 1
+  num_task_expert_list: 
+  input_dim: 1658 # 1681
+  expert_out_dims: [[1024], [512], [256]]  # [1681, 1024], 
+  exp_res_connect: True
+  tower_units: 32
+  tower_hidden_units: [128, 64]   # [32, 16, 8]
+  poso_hidden_units: [32, 16]
+  dropout: 0.5
+  use_bn: False
+  loss: ''  # focalloss
+  
+Data:
+  trainFilePath: '../dataset/train_dataset_2022-05-02.txt'  # _sample
+  testFilePath: '../dataset/test_dataset_2022-05-02.txt'
+  # filePath: 'xxx/dl/mt/dataset/dataset_np/'
+  # featureColumns: 'xxx/dl/mt/dataset/feature_columns.npy'
+  filePath: 'xxx/dl/mt/preprocess_poso/dataset/dataset_np/'
+  featureColumns: 'xxx/dl/mt/preprocess_poso/dataset/feature_columns.npy'
+
+Train:
+  lr: 0.001
+  batchSize: 64  # 8 16 -> 4096
+  milestones: [10, 20, 30] # [10, 20, 30]
+  gamma: 0.5
+  epochs: 60
+  numWorkers: 16
+  dataSize: 256  # true batchsize = batchSize * dataSize
+  stage: [0]
+  
+Test:
+  batchSize: 4096
+
+Seed: 2021
+  

@@ -1,0 +1,150 @@
+Model:
+  embed_dim: 8
+  mode: 'multi-label'  # multi-class  multi-label
+  loss: ''
+
+  head:
+    input_units: 32
+    hidden_units: [16, 8]
+    dropout: 0.5
+    use_bn: False
+    
+  info:
+    dropout: 0.5
+    use_bn: False  
+  
+  tower:
+    input_units: 135 # 128 + 7
+    output_units: 32
+    hidden_units: [ 64, 32 ]
+    dropout: 0.5
+    use_bn: False
+
+  level0:
+    # output_units: 512
+    # hidden_units: [ 512, 256, 512 ]
+    output_units: 1024
+    hidden_units: [ 1024, 512 ]
+    num_tasks: 3  # 用户，渠道，行为
+
+  level1:
+    level1_0:
+      input_units: 1024
+      output_units: 256
+      expert_hidden_units: [ 512 ]
+      num_experts: 3
+      num_tasks: 2
+      dropout: 0.5
+      use_bn: False
+    level1_1:
+      input_units: 1024
+      output_units: 256
+      expert_hidden_units: [ 512 ]
+      num_experts: 3
+      num_tasks: 3
+      dropout: 0.5
+      use_bn: False
+    level1_2:
+      input_units: 1024
+      output_units: 256
+      expert_hidden_units: [ 512 ]
+      num_experts: 3
+      num_tasks: 4
+      dropout: 0.5
+      use_bn: False
+
+  level2:
+    level2_0:
+      input_units: 256
+      output_units: [[128], [128]]
+      num_experts: 1
+      num_tasks: 12
+      dropout: 0.5
+      use_bn: False
+      exp_res_connect: True
+    level2_1:
+      input_units: 256
+      output_units: [[128], [128]]
+      num_experts: 1
+      num_tasks: 12
+      dropout: 0.5
+      use_bn: False
+      exp_res_connect: True
+    level2_2:
+      input_units: 256
+      output_units: [[128], [128]]
+      num_experts: 1
+      num_tasks: 8
+      dropout: 0.5
+      use_bn: False
+      exp_res_connect: True
+    level2_3:
+      input_units: 256
+      output_units: [[128], [128]]
+      num_experts: 1
+      num_tasks: 8
+      dropout: 0.5
+      use_bn: False
+      exp_res_connect: True
+    level2_4:
+      input_units: 256
+      output_units: [[128], [128]]
+      num_experts: 1
+      num_tasks: 8
+      dropout: 0.5
+      use_bn: False
+      exp_res_connect: True
+    level2_5:
+      input_units: 256
+      output_units: [[128], [128]]
+      num_experts: 1
+      num_tasks: 6
+      dropout: 0.5
+      use_bn: False
+      exp_res_connect: True
+    level2_6:
+      input_units: 256
+      output_units: [[128], [128]]
+      num_experts: 1
+      num_tasks: 6
+      dropout: 0.5
+      use_bn: False
+      exp_res_connect: True
+    level2_7:
+      input_units: 256
+      output_units: [[128], [128]]
+      num_experts: 1
+      num_tasks: 6
+      dropout: 0.5
+      use_bn: False
+      exp_res_connect: True
+    level2_8:
+      input_units: 256
+      output_units: [[128], [128]]
+      num_experts: 1
+      num_tasks: 6
+      dropout: 0.5
+      use_bn: False
+      exp_res_connect: True
+
+
+Data:
+  trainFilePath: '../data/train_dataset_2022-05-02.txt'  # _sample
+  testFilePath: '../data/test_dataset_2022-05-02.txt'
+  filePath: 'xxx/preprocess/dataset_np/'
+  featureColumns: 'xxx/preprocess/feature_columns.npy'
+
+Train:
+  lr: 0.001  # 0.003
+  batchSize: 64  # 16 -> 4096
+  milestones: [ 8, 18, 28 ] # [10, 20, 30]
+  gamma: 0.5  # 0.1
+  epochs: 60
+  numWorkers: 16
+  dataSize: 256  # true batchsize = batchSize * dataSize
+  stage: [ 0 ]
+
+Test:
+  batchSize: 4096
+
+Seed: 2021
